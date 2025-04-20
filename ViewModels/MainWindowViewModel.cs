@@ -30,7 +30,7 @@ public partial class MainWindowViewModel : ViewModelBase
 	// 音声ファイルパス パブリック
 	public string SelectedVoiceFileLabel
 	{
-		get => _selectedVoiceFile;
+		get => System.IO.Path.GetFileName(_selectedVoiceFile);
 		set
 		{
 			_selectedVoiceFile = value;
