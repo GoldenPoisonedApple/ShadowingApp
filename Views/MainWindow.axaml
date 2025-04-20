@@ -1,0 +1,55 @@
+	<Window xmlns="https://github.com/avaloniaui"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:vm="using:ShadowingApp.ViewModels"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+		x:Class="ShadowingApp.Views.MainWindow"
+		x:DataType="vm:MainWindowViewModel"
+		Icon="/Assets/avalonia-logo.ico"
+		Title="ShadowingApp">
+
+	<Design.DataContext>
+		<!-- This only sets the DataContext for the previewer in an IDE,
+				to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+
+	<Window.Styles>
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Blue" />
+		</Style>
+		<Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Red" />
+		</Style>
+	</Window.Styles>
+
+	<StackPanel Margin="20">
+		<!-- 音声選択エリア -->
+		<StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+			<Button Background="MistyRose" Width="100" Height="40" CornerRadius="10">
+				<StackPanel Orientation="Horizontal">
+					<Image Source="avares://ShadowingApp/Assets/音楽ファイルアイコン 1.png"/>
+					<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="選択" FontSize="18" VerticalAlignment="Center"/>
+				</StackPanel>
+			</Button>
+			<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="音声データ" FontSize="15" VerticalAlignment="Center"/>
+		</StackPanel>
+		<!-- 音声表示エリア -->
+		<DockPanel Margin="0 15 0 0">
+			<Button DockPanel.Dock="Right" Margin="25 0 0 0" Background="#AE2525" Width="60" Height="60" CornerRadius="10" Padding="14" VerticalAlignment="Bottom">
+				<Image Source="avares://ShadowingApp/Assets/マイクのアイコンその10.png"/>
+			</Button>
+			<Rectangle Height="100" Fill="LightGray"/>
+		</DockPanel>
+
+
+		<TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+		<Panel>
+			<Rectangle Height="300" Width="300" Fill="LightGray"/>
+			<Image Margin="20" Height="200" Width="200" 
+					Source="avares://ShadowingApp/Assets/test.png"/>
+		</Panel>
+
+	</StackPanel>
+	</Window>
