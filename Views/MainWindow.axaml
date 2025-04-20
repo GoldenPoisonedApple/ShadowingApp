@@ -46,13 +46,13 @@
 	<StackPanel Margin="20">
 		<!-- 音声選択エリア -->
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-			<Button Background="MistyRose" Width="100" Height="40" CornerRadius="10" Command="{Binding SelectedVoice}">
+			<Button Background="MistyRose" Width="100" Height="40" CornerRadius="10" Command="{Binding SelectVoice}">
 				<StackPanel Orientation="Horizontal">
 					<Image Source="avares://ShadowingApp/Assets/音楽ファイルアイコン 1.png"/>
 					<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="選択" FontSize="18" VerticalAlignment="Center"/>
 				</StackPanel>
 			</Button>
-			<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="音声データ" FontSize="15" VerticalAlignment="Center"/>
+			<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="{Binding SelectedVoiceFileLabel}" FontSize="15" VerticalAlignment="Center"/>
 		</StackPanel>
 
 		<!-- 音声表示エリア -->

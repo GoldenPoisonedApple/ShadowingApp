@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using ReactiveUI;
 using System.Windows.Input;
-using Avalonia.Controls;
 using Avalonia.Platform.Storage;
 using System.Collections.Generic;
 using Avalonia;
@@ -12,28 +11,41 @@ namespace ShadowingApp.ViewModels;
 
 public partial class MainWindowViewModel : ViewModelBase
 {
-	// プライベートフィールドを追加
+	// デバッグ用テキスト
 	private string _debugText = "Welcome to Avalonia!";
 
-	// プロパティのゲッターとセッターを定義
+	// デバッグ用テキスト パブリック
 	public string DebugText
 	{
 		get => _debugText;
 		private set
 		{
-			_debugText = value;
+			_debugText += "\n" + value;
 			this.RaisePropertyChanged(nameof(DebugText));
 		}
 	}
 
+	// 音声ファイルパス
+	private string _selectedVoiceFile = "音声ファイルを選択してください";
+	// 音声ファイルパス パブリック
+	public string SelectedVoiceFileLabel
+	{
+		get => _selectedVoiceFile;
+		set
+		{
+			_selectedVoiceFile = value;
+			this.RaisePropertyChanged(nameof(SelectedVoiceFileLabel));
+		}
+	}
+
 	// コマンドを宣言
-	public ICommand SelectedVoice { get; }
+	public ICommand SelectVoice { get; }
 
 	// コンストラクタ
 	public MainWindowViewModel()
 	{
 		// ReactiveCommandを使用してコマンドを作成
-		SelectedVoice = ReactiveCommand.CreateFromTask(SelectVoiceFile);
+		SelectVoice = ReactiveCommand.CreateFromTask(SelectVoiceFile);
 	}
 
 
@@ -68,6 +80,7 @@ public partial class MainWindowViewModel : ViewModelBase
 				{
 					// 選択されたファイルのパスを取得
 					var filePath = files[0].Path.LocalPath;
+					SelectedVoiceFileLabel = filePath;
 					DebugText = $"選択されたファイル: {filePath}";
 				}
 				else
@@ -75,10 +88,8 @@ public partial class MainWindowViewModel : ViewModelBase
 					DebugText = "ファイルが選択されませんでした";
 				}
 			}
-			else
-			{
-				DebugText = "ストレージプロバイダーが利用できません";
-			}
+
 		}
+
 	}
 }
