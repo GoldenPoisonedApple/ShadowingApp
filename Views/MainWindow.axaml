@@ -73,6 +73,7 @@
 
 		<!-- コントロールエリア -->
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+			<!-- 30秒バック -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
 				<Button Background="Transparent" Width="42" Height="42" Padding="1">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
@@ -83,6 +84,7 @@
 				</Button>
 				<TextBlock HorizontalAlignment="Center" Text="30" FontSize="14"/>
 			</StackPanel>
+			<!-- 5秒バック -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
 				<Button Background="Transparent" Width="30" Height="30" Padding="1">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
@@ -93,7 +95,8 @@
 				</Button>
 				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
 			</StackPanel>
-			<Button Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50">
+			<!-- 再生ボタン -->
+			<Button Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50" Command="{Binding PlayCommand}">
 				<Path Fill="White" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6 0 0 0">
 					<Path.Data>
 						<PathGeometry>
@@ -105,12 +108,14 @@
 					</Path.Data>
 				</Path>
 			</Button>
+			<!-- 5秒スキップ -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
 				<Button Background="Transparent" Width="30" Height="30" Padding="1">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
 				</Button>
 				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
 			</StackPanel>
+			<!-- 30秒スキップ -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
 				<Button Background="Transparent" Width="42" Height="42" Padding="1">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />

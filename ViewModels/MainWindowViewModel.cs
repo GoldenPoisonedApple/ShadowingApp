@@ -5,6 +5,10 @@ using Avalonia.Platform.Storage;
 using System.Collections.Generic;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
+using NAudio.Wave;
+using System;
+using System.Reactive.Linq;
+using System.IO;
 
 namespace ShadowingApp.ViewModels;
 
@@ -13,7 +17,6 @@ public partial class MainWindowViewModel : ViewModelBase
 {
 	// デバッグ用テキスト
 	private string _debugText = "Welcome to Avalonia!";
-
 	// デバッグ用テキスト パブリック
 	public string DebugText
 	{
@@ -30,7 +33,7 @@ public partial class MainWindowViewModel : ViewModelBase
 	// 音声ファイルパス パブリック
 	public string SelectedVoiceFileLabel
 	{
-		get => System.IO.Path.GetFileName(_selectedVoiceFile);
+		get => Path.GetFileName(_selectedVoiceFile);
 		set
 		{
 			_selectedVoiceFile = value;
@@ -41,11 +44,29 @@ public partial class MainWindowViewModel : ViewModelBase
 	// コマンドを宣言
 	public ICommand SelectVoice { get; }
 
+	// 音声再生用のフィールド
+	private IWavePlayer? _waveOutDevice;
+	private AudioFileReader? _audioFileReader;
+	private bool _isPlaying = false;
+
+	// 再生コマンド
+	public ICommand PlayCommand { get; }
+
+
+
 	// コンストラクタ
 	public MainWindowViewModel()
 	{
 		// ReactiveCommandを使用してコマンドを作成
 		SelectVoice = ReactiveCommand.CreateFromTask(SelectVoiceFile);
+
+		// 再生コマンドの作成 - ファイル選択されている場合のみ実行可能
+		// var canPlay = this.WhenAnyValue(
+		// 		x => x._selectedVoiceFile,
+		// 		file => !string.IsNullOrEmpty(file) && file != "音声ファイルを選択してください" && File.Exists(file)
+		// );
+
+		PlayCommand = ReactiveCommand.Create(PlayAudio);
 	}
 
 
@@ -91,5 +112,72 @@ public partial class MainWindowViewModel : ViewModelBase
 
 		}
 
+	}
+
+
+	// 音声再生メソッド
+	private void PlayAudio()
+	{
+			try
+			{
+					// 既に再生中なら停止
+					if (_isPlaying)
+					{
+							StopAudio();
+							return;
+					}
+
+					// 再生デバイスとファイルリーダーを初期化
+					_waveOutDevice = new WaveOutEvent();
+					_audioFileReader = new AudioFileReader(_selectedVoiceFile);
+					
+					// イベントハンドラを設定
+					_waveOutDevice.PlaybackStopped += OnPlaybackStopped;
+					
+					// 再生デバイスにファイルを設定して再生
+					_waveOutDevice.Init(_audioFileReader);
+					_waveOutDevice.Play();
+					
+					_isPlaying = true;
+					DebugText = "再生開始しました";
+			}
+			catch (Exception ex)
+			{
+					DebugText = $"再生エラー: {ex.Message}";
+					StopAudio();
+			}
+	}
+
+	// 再生停止メソッド
+	private void StopAudio()
+	{
+			if (_waveOutDevice != null)
+			{
+					_waveOutDevice.PlaybackStopped -= OnPlaybackStopped;
+					_waveOutDevice.Stop();
+					_waveOutDevice.Dispose();
+					_waveOutDevice = null;
+			}
+
+			if (_audioFileReader != null)
+			{
+					_audioFileReader.Dispose();
+					_audioFileReader = null;
+			}
+
+			_isPlaying = false;
+			DebugText = "再生停止しました";
+	}
+
+	// 再生終了時のイベントハンドラ
+	private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
+	{
+			StopAudio();
+	}
+
+	// リソース解放
+	public void Dispose()
+	{
+			StopAudio();
 	}
 }
