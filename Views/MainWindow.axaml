@@ -18,13 +18,13 @@
 
 	<Window.Resources>
 		<!-- Thumbの背景色を変更 -->
-		<SolidColorBrush x:Key="SliderThumbBackground" Color="#ff0033" />
-		<SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="#ff0033" />
-		<SolidColorBrush x:Key="SliderThumbBackgroundPressed" Color="#ff0033" />
+		<SolidColorBrush x:Key="SliderThumbBackground" Color="{StaticResource AccentColor}" />
+		<SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="{StaticResource AccentColor}" />
+		<SolidColorBrush x:Key="SliderThumbBackgroundPressed" Color="{StaticResource AccentColor}" />
 		<!-- スライダーの値トラック色（進行した部分）を変更 -->
-		<SolidColorBrush x:Key="SliderTrackValueFill" Color="#ff0033" />
-		<SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="#ff0033" />
-		<SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="#ff0033" />
+		<SolidColorBrush x:Key="SliderTrackValueFill" Color="{StaticResource AccentColor}" />
+		<SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="{StaticResource AccentColor}" />
+		<SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="{StaticResource AccentColor}" />
 		<!-- Thumbのサイズを変更 -->
 		<x:Double x:Key="SliderHorizontalThumbWidth">10</x:Double>  <!-- 横向きスライダーのThumb幅 -->
 		<x:Double x:Key="SliderHorizontalThumbHeight">10</x:Double> <!-- 横向きスライダーのThumb高さ -->
@@ -57,7 +57,7 @@
 
 		<!-- 音声表示エリア -->
 		<DockPanel Margin="0 15 0 0">
-			<Button DockPanel.Dock="Right" Margin="25 0 0 0" Background="#AE2525" Width="60" Height="60" CornerRadius="10" Padding="14" VerticalAlignment="Bottom">
+			<Button DockPanel.Dock="Right" Margin="25 0 0 0" Background="{StaticResource AccentBrush}" Width="60" Height="60" CornerRadius="10" Padding="14" VerticalAlignment="Bottom">
 				<Image Source="avares://ShadowingApp/Assets/マイクのアイコンその10.png"/>
 			</Button>
 			<Rectangle Height="160" Fill="LightGray"/>
@@ -75,7 +75,7 @@
 					<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="再生" FontSize="18" VerticalAlignment="Center"/>
 				</StackPanel>
 			</Button>
-			<Button Background="#AE2525" Width="70" Height="70" CornerRadius="50">
+			<Button Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50">
 				<Path Fill="White" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6 0 0 0">
 					<Path.Data>
 						<PathGeometry>
