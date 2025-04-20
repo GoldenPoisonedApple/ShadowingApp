@@ -29,7 +29,6 @@
 		<!-- Thumbのサイズを変更 -->
 		<x:Double x:Key="SliderHorizontalThumbWidth">12</x:Double>  <!-- 横向きスライダーのThumb幅 -->
 		<x:Double x:Key="SliderHorizontalThumbHeight">12</x:Double> <!-- 横向きスライダーのThumb高さ -->
-
 	</Window.Resources>
 
 	<Window.Styles>
@@ -43,11 +42,11 @@
 		</Style>
 	</Window.Styles>
 
-	
+	<!-- Body -->
 	<StackPanel Margin="20">
 		<!-- 音声選択エリア -->
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-			<Button Background="MistyRose" Width="100" Height="40" CornerRadius="10">
+			<Button Background="MistyRose" Width="100" Height="40" CornerRadius="10" Command="{Binding SelectedVoice}">
 				<StackPanel Orientation="Horizontal">
 					<Image Source="avares://ShadowingApp/Assets/音楽ファイルアイコン 1.png"/>
 					<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="選択" FontSize="18" VerticalAlignment="Center"/>
@@ -119,5 +118,8 @@
 				<TextBlock HorizontalAlignment="Center" Text="30" FontSize="14"/>
 			</StackPanel>
 		</StackPanel>
+
+		<!-- デバッグ用 -->
+		<TextBlock Margin="0 20 0 0" Text="{Binding DebugText}" />
 	</StackPanel>
 	</Window>
