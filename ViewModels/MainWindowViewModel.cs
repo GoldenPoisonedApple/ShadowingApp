@@ -1,9 +1,14 @@
 ﻿using System.Threading.Tasks;
 using ReactiveUI;
 using System.Windows.Input;
-using System.Reactive.Linq;
+using Avalonia.Controls;
+using Avalonia.Platform.Storage;
+using System.Collections.Generic;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 
 namespace ShadowingApp.ViewModels;
+
 
 public partial class MainWindowViewModel : ViewModelBase
 {
@@ -28,18 +33,52 @@ public partial class MainWindowViewModel : ViewModelBase
 	public MainWindowViewModel()
 	{
 		// ReactiveCommandを使用してコマンドを作成
-		SelectedVoice = ReactiveCommand.CreateFromTask(async () =>
-		{
-			await TestFunc(); // コマンド実行時の処理を呼び出す
-			DebugText = "Selected Voice Executed!"; // セッターを通じて変更通知も発行
-		});
+		SelectedVoice = ReactiveCommand.CreateFromTask(SelectVoiceFile);
 	}
 
-	// コマンドの実行内容を定義
-	private async Task TestFunc()
+
+
+	// 音声ファイル選択
+	private async Task SelectVoiceFile()
 	{
-		// ここに非同期処理を記述
-		await Task.Delay(1000); // 1秒待機
-		DebugText = "TestFunc executed!"; // デバッグテキストを更新
+		// ApplicationLifetime を取得
+		if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+		{
+			// ファイルピッカーのオプションを設定
+			var options = new FilePickerOpenOptions
+			{
+				Title = "音声ファイルを選択",
+				AllowMultiple = false,
+				FileTypeFilter = new List<FilePickerFileType>
+						{
+								new FilePickerFileType("音声ファイル")
+								{
+										Patterns = new[] { "*.wav", "*.mp3" },
+										MimeTypes = new[] { "audio/wav", "audio/mpeg" }
+								}
+						}
+			};
+
+			// ファイルピッカーを表示
+			if (desktop.MainWindow?.StorageProvider != null)
+			{
+				var files = await desktop.MainWindow.StorageProvider.OpenFilePickerAsync(options);
+
+				if (files != null && files.Count > 0)
+				{
+					// 選択されたファイルのパスを取得
+					var filePath = files[0].Path.LocalPath;
+					DebugText = $"選択されたファイル: {filePath}";
+				}
+				else
+				{
+					DebugText = "ファイルが選択されませんでした";
+				}
+			}
+			else
+			{
+				DebugText = "ストレージプロバイダーが利用できません";
+			}
+		}
 	}
 }
