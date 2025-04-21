@@ -17,7 +17,6 @@ public partial class MainWindowViewModel : ViewModelBase
 {
 	// デバッグ用テキスト
 	private string _debugText = "Welcome to Avalonia!";
-	// デバッグ用テキスト パブリック
 	public string DebugText
 	{
 		get => _debugText;
@@ -28,11 +27,9 @@ public partial class MainWindowViewModel : ViewModelBase
 		}
 	}
 
-	// 音声ファイルパス
-	private string? _selectedVoiceFile;
+
 	// 音声ファイルラベル
 	private string _selectedVoiceFileLabel = "音声ファイルを選択してください";
-	// 音声ファイルラベル パブリック
 	public string SelectedVoiceFileLabel
 	{
 		get => _selectedVoiceFileLabel;
@@ -43,16 +40,41 @@ public partial class MainWindowViewModel : ViewModelBase
 		}
 	}
 
-	// コマンドを宣言
+	// シークバーラベル
+	private string _elapsedLabel = "--:--";
+	public string ElapsedLabel
+	{
+		get => _elapsedLabel;
+		set
+		{
+			_elapsedLabel = value;
+			this.RaisePropertyChanged(nameof(ElapsedLabel));
+		}
+	}
+
+	private string _remainingLabel = "--:--";
+	public string RemainingLabel
+	{
+		get => _remainingLabel;
+		set
+		{
+			_remainingLabel = value;
+			this.RaisePropertyChanged(nameof(RemainingLabel));
+		}
+	}
+
+	// コマンド
+	// 音声ファイル選択コマンド
 	public ICommand SelectVoice { get; }
+	// 再生コマンド
+	public ICommand PlayCommand { get; }
 
 	// 音声再生用のフィールド
 	private IWavePlayer? _waveOutDevice;
 	private AudioFileReader? _audioFileReader;
 	private bool _isPlaying = false;
-
-	// 再生コマンド
-	public ICommand PlayCommand { get; }
+	// 音声ファイルパス
+	private string? _selectedVoiceFile;
 
 
 
@@ -131,7 +153,8 @@ public partial class MainWindowViewModel : ViewModelBase
 			// 再生デバイスにファイルを設定して再生
 			_waveOutDevice.Init(_audioFileReader);
 
-			// 音声ファイルの情報を取得
+			// シークバー反映
+			UpdateSeekBar();
 			DebugText = _audioFileReader.TotalTime.ToString();
 
 			// ラベル表示
@@ -139,6 +162,10 @@ public partial class MainWindowViewModel : ViewModelBase
 		}
 		catch (Exception)
 		{
+			// シークバー反映
+			ElapsedLabel = "--:--";
+			RemainingLabel = "--:--";
+			// ラベル表示
 			SelectedVoiceFileLabel = "音声ファイルを読み込めませんでした";
 		}
 	}
@@ -208,5 +235,17 @@ public partial class MainWindowViewModel : ViewModelBase
 	public void Dispose()
 	{
 		StopAudio();
+	}
+
+	// シークバー反映
+	private void UpdateSeekBar()
+	{
+		if (_audioFileReader != null)
+		{
+			TimeSpan currentTime = _audioFileReader.CurrentTime;
+			TimeSpan remainTime = _audioFileReader.TotalTime - currentTime;
+			ElapsedLabel = (60 * currentTime.Hours + currentTime.Minutes).ToString("D2") + ":" + currentTime.Seconds.ToString("D2");
+			RemainingLabel = "-" + (60 * remainTime.Hours + remainTime.Minutes).ToString("D2") + ":" + remainTime.Seconds.ToString("D2");
+		}
 	}
 }
