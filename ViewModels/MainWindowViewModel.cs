@@ -7,9 +7,8 @@ using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using NAudio.Wave;
 using System;
-using System.Reactive.Linq;
 using System.IO;
-using System.Diagnostics;
+using Avalonia.Threading;
 
 namespace ShadowingApp.ViewModels;
 
@@ -114,6 +113,9 @@ public partial class MainWindowViewModel : ViewModelBase
 	// 音声ファイルパス
 	private string? _selectedVoiceFile;
 
+	// タイマー関連
+	private System.Timers.Timer? _updateTimer;
+	private const int TIMER_INTERVAL = 100; // 100ミリ秒ごとに更新（滑らかさと性能のバランス）
 
 	// コンストラクタ
 	public MainWindowViewModel()
@@ -128,12 +130,36 @@ public partial class MainWindowViewModel : ViewModelBase
 		// 音声再生管理コマンド
 		PlayControlCommand = ReactiveCommand.Create(() =>
 		{
-			if (_waveOutDevice?.PlaybackState == PlaybackState.Playing) {
+			if (_waveOutDevice?.PlaybackState == PlaybackState.Playing)
+			{
 				PauseAudioFile();
-			} else if (_waveOutDevice != null) {
+			}
+			else if (_waveOutDevice != null)
+			{
 				PlayAudioFile();
 			}
 		});
+
+		// タイマーの初期化
+		_updateTimer = new System.Timers.Timer(TIMER_INTERVAL);
+		_updateTimer.Elapsed += (sender, e) =>
+		{
+			// UIスレッドで実行する必要がある
+			if (Application.Current != null)
+			{
+				// Dispatcher.UIThread を使用
+				Dispatcher.UIThread.Post(() =>
+					{
+						if (_audioFileReader != null && _waveOutDevice?.PlaybackState == PlaybackState.Playing)
+						{
+							// CurrentTimeプロパティのgetが呼ばれるが、setは呼ばれない
+							this.RaisePropertyChanged(nameof(CurrentTime));
+							// シークバーラベルも更新
+							UpdateSeekBar();
+						}
+					});
+			}
+		};
 	}
 
 
@@ -220,6 +246,8 @@ public partial class MainWindowViewModel : ViewModelBase
 	{
 		// 再生開始
 		_waveOutDevice?.Play();
+    // タイマー開始
+    _updateTimer?.Start();
 		// シークバー更新
 		UpdateSeekBar();
 		DebugText = "再生開始";
@@ -230,6 +258,8 @@ public partial class MainWindowViewModel : ViewModelBase
 	{
 		// 再生停止
 		_waveOutDevice?.Pause();
+    // タイマー停止
+    _updateTimer?.Stop();
 		// シークバー更新
 		UpdateSeekBar();
 		DebugText = "再生停止";
@@ -248,4 +278,17 @@ public partial class MainWindowViewModel : ViewModelBase
 			RemainingLabel = "-" + (60 * remainTime.Hours + remainTime.Minutes).ToString("D2") + ":" + remainTime.Seconds.ToString("D2");
 		}
 	}
+
+	// ウィンドウクローズ時の処理
+	public void OnWindowClosing()
+	{
+		// タイマー
+		_updateTimer?.Stop();
+		_updateTimer?.Dispose();
+		// 再生デバイスとファイルリーダー
+		_waveOutDevice?.Stop();
+		_waveOutDevice?.Dispose();
+		_audioFileReader?.Dispose();
+	}
+
 }
