@@ -67,7 +67,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
 
 	// シークバー
-	// 現在値 setすると勝手にgetされるっぽい
+	// 現在値 シークバーからsetすると勝手にgetされるっぽい
 	public double CurrentTime
 	{
 		get
@@ -83,6 +83,8 @@ public partial class MainWindowViewModel : ViewModelBase
 			_audioFileReader.CurrentTime = TimeSpan.FromMilliseconds(value);
 			// シークバーラベル反映
 			UpdateSeekBar();
+			// 反映
+			this.RaisePropertyChanged(nameof(CurrentTime));
 		}
 	}
 	// 最大値
@@ -195,6 +197,7 @@ public partial class MainWindowViewModel : ViewModelBase
 			_waveOutDevice.Init(_audioFileReader);
 
 			// シークバー反映
+			CurrentTime = 0;
 			TotalTime = _audioFileReader.TotalTime.TotalMilliseconds;
 			UpdateSeekBar();
 			DebugText = _audioFileReader.TotalTime.ToString();
