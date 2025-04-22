@@ -101,17 +101,8 @@
 				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
 			</StackPanel>
 			<!-- 再生ボタン -->
-			<Button Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50" Command="{Binding PlayControlCommand}">
-				<Path Fill="White" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6 0 0 0">
-					<Path.Data>
-						<PathGeometry>
-							<PathFigure StartPoint="0,0" IsClosed="True">
-								<LineSegment Point="22, 15"/>
-								<LineSegment Point="0,30"/>
-							</PathFigure>
-						</PathGeometry>
-					</Path.Data>
-				</Path>
+			<Button Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50" Padding="20" Command="{Binding PlayControlCommand}">
+				<Image Source="avares://ShadowingApp/Assets/再生ボタン.png" />
 			</Button>
 			<!-- 5秒スキップ -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
