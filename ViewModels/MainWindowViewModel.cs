@@ -67,7 +67,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
 
 	// シークバー
-	// 現在値
+	// 現在値 setすると勝手にgetされるっぽい
 	public double CurrentTime
 	{
 		get
@@ -101,14 +101,16 @@ public partial class MainWindowViewModel : ViewModelBase
 	// コマンド
 	// 音声ファイル選択コマンド
 	public ICommand SelectVoice { get; }
+	// 音声再生コマンド
+	public ICommand PlayControlCommand { get; }
+
 
 	// 音声再生用のフィールド
 	private IWavePlayer? _waveOutDevice;
 	private AudioFileReader? _audioFileReader;
-	private bool _isPlaying = false;
+
 	// 音声ファイルパス
 	private string? _selectedVoiceFile;
-
 
 
 	// コンストラクタ
@@ -119,6 +121,16 @@ public partial class MainWindowViewModel : ViewModelBase
 		{
 			await SelectVoiceFile();
 			LoadAudioFile();
+		});
+
+		// 音声再生管理コマンド
+		PlayControlCommand = ReactiveCommand.Create(() =>
+		{
+			if (_waveOutDevice?.PlaybackState == PlaybackState.Playing) {
+				PauseAudioFile();
+			} else if (_waveOutDevice != null) {
+				PlayAudioFile();
+			}
 		});
 	}
 
@@ -199,6 +211,28 @@ public partial class MainWindowViewModel : ViewModelBase
 			SelectedVoiceFileLabel = "音声ファイルを読み込めませんでした";
 		}
 	}
+
+	// 音声再生
+	private void PlayAudioFile()
+	{
+		// 再生開始
+		_waveOutDevice?.Play();
+		// シークバー更新
+		UpdateSeekBar();
+		DebugText = "再生開始";
+	}
+
+	// 音声一時停止
+	private void PauseAudioFile()
+	{
+		// 再生停止
+		_waveOutDevice?.Pause();
+		// シークバー更新
+		UpdateSeekBar();
+		DebugText = "再生停止";
+	}
+
+
 
 	// シークバー反映
 	private void UpdateSeekBar()
