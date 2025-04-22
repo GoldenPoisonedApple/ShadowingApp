@@ -9,6 +9,7 @@ using NAudio.Wave;
 using System;
 using System.Reactive.Linq;
 using System.IO;
+using System.Diagnostics;
 
 namespace ShadowingApp.ViewModels;
 
@@ -41,6 +42,7 @@ public partial class MainWindowViewModel : ViewModelBase
 	}
 
 	// シークバーラベル
+	// 再生時間
 	private string _elapsedLabel = "--:--";
 	public string ElapsedLabel
 	{
@@ -51,7 +53,7 @@ public partial class MainWindowViewModel : ViewModelBase
 			this.RaisePropertyChanged(nameof(ElapsedLabel));
 		}
 	}
-
+	// 残り時間
 	private string _remainingLabel = "--:--";
 	public string RemainingLabel
 	{
@@ -63,11 +65,42 @@ public partial class MainWindowViewModel : ViewModelBase
 		}
 	}
 
+
+	// シークバー
+	// 現在値
+	public double CurrentTime
+	{
+		get
+		{
+			if (_audioFileReader == null) return 0;
+			// 再生時間取得
+			return _audioFileReader.CurrentTime.TotalMilliseconds;
+		}
+		set
+		{
+			if (_audioFileReader == null) return;
+			// 再生時間反映
+			_audioFileReader.CurrentTime = TimeSpan.FromMilliseconds(value);
+			// シークバーラベル反映
+			UpdateSeekBar();
+		}
+	}
+	// 最大値
+	private double _totalTime = 1;
+	public double TotalTime
+	{
+		get => _totalTime;
+		set
+		{
+			_totalTime = value;
+			this.RaisePropertyChanged(nameof(TotalTime));
+		}
+	}
+
+
 	// コマンド
 	// 音声ファイル選択コマンド
 	public ICommand SelectVoice { get; }
-	// 再生コマンド
-	public ICommand PlayCommand { get; }
 
 	// 音声再生用のフィールド
 	private IWavePlayer? _waveOutDevice;
@@ -87,8 +120,6 @@ public partial class MainWindowViewModel : ViewModelBase
 			await SelectVoiceFile();
 			LoadAudioFile();
 		});
-
-		PlayCommand = ReactiveCommand.Create(PlayAudio);
 	}
 
 
@@ -138,22 +169,21 @@ public partial class MainWindowViewModel : ViewModelBase
 			SelectedVoiceFileLabel = "音声ファイルが選択されていません";
 			return;
 		}
-		
+
 		try
 		{
-			// 音声ファイル読み込み7
+			// 音声ファイル読み込み
 			// 再生デバイスとファイルリーダーを初期化
 			_waveOutDevice?.Stop();
 			_waveOutDevice?.Dispose();
 			_audioFileReader?.Dispose();
 			_waveOutDevice = new WaveOutEvent();
 			_audioFileReader = new AudioFileReader(_selectedVoiceFile);
-			// イベントハンドラを設定
-			_waveOutDevice.PlaybackStopped += OnPlaybackStopped;
 			// 再生デバイスにファイルを設定して再生
 			_waveOutDevice.Init(_audioFileReader);
 
 			// シークバー反映
+			TotalTime = _audioFileReader.TotalTime.TotalMilliseconds;
 			UpdateSeekBar();
 			DebugText = _audioFileReader.TotalTime.ToString();
 
@@ -168,73 +198,6 @@ public partial class MainWindowViewModel : ViewModelBase
 			// ラベル表示
 			SelectedVoiceFileLabel = "音声ファイルを読み込めませんでした";
 		}
-	}
-
-
-	// 音声再生メソッド
-	private void PlayAudio()
-	{
-		try
-		{
-			// 既に再生中なら停止
-			if (_isPlaying)
-			{
-				StopAudio();
-				return;
-			}
-
-			// 再生デバイスとファイルリーダーを初期化
-			_waveOutDevice = new WaveOutEvent();
-			_audioFileReader = new AudioFileReader(_selectedVoiceFile);
-
-			// イベントハンドラを設定
-			_waveOutDevice.PlaybackStopped += OnPlaybackStopped;
-
-			// 再生デバイスにファイルを設定して再生
-			_waveOutDevice.Init(_audioFileReader);
-			_waveOutDevice.Play();
-
-			_isPlaying = true;
-			DebugText = "再生開始しました";
-		}
-		catch (Exception ex)
-		{
-			DebugText = $"再生エラー: {ex.Message}";
-			StopAudio();
-		}
-	}
-
-	// 再生停止メソッド
-	private void StopAudio()
-	{
-		if (_waveOutDevice != null)
-		{
-			_waveOutDevice.PlaybackStopped -= OnPlaybackStopped;
-			_waveOutDevice.Stop();
-			_waveOutDevice.Dispose();
-			_waveOutDevice = null;
-		}
-
-		if (_audioFileReader != null)
-		{
-			_audioFileReader.Dispose();
-			_audioFileReader = null;
-		}
-
-		_isPlaying = false;
-		DebugText = "再生停止しました";
-	}
-
-	// 再生終了時のイベントハンドラ
-	private void OnPlaybackStopped(object? sender, StoppedEventArgs e)
-	{
-		StopAudio();
-	}
-
-	// リソース解放
-	public void Dispose()
-	{
-		StopAudio();
 	}
 
 	// シークバー反映
