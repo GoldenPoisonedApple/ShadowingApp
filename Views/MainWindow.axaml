@@ -17,6 +17,11 @@
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 
+	<!-- キーバインディングを追加 -->
+	<Window.KeyBindings>
+			<KeyBinding Gesture="Space" Command="{Binding PlayControlCommand}"/>
+	</Window.KeyBindings>
+
 	<Window.Resources>
 		<!-- Thumbの背景色を変更 -->
 		<SolidColorBrush x:Key="SliderThumbBackground" Color="{StaticResource AccentColor}" />

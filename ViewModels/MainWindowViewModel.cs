@@ -250,7 +250,6 @@ public partial class MainWindowViewModel : ViewModelBase
     _updateTimer?.Start();
 		// シークバー更新
 		UpdateSeekBar();
-		DebugText = "再生開始";
 	}
 
 	// 音声一時停止
@@ -262,7 +261,6 @@ public partial class MainWindowViewModel : ViewModelBase
     _updateTimer?.Stop();
 		// シークバー更新
 		UpdateSeekBar();
-		DebugText = "再生停止";
 	}
 
 
