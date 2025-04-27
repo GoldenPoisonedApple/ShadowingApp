@@ -10,8 +10,6 @@ namespace ShadowingApp.Converters
 {
 	public class ToggleImageSourceConverter : IValueConverter
 	{
-		private const string DefaultImagePath = "avares://ShadowingApp/Assets/Images/test.png";
-
 		public string FalseValue { get; set; } = string.Empty;
 		public string TrueValue { get; set; } = string.Empty;
 
@@ -19,8 +17,6 @@ namespace ShadowingApp.Converters
 		{
 			if (value is bool boolValue)
 			{
-				Debug.WriteLine($"ToggleImageSourceConverter: {boolValue}");
-
 				var path = boolValue ? TrueValue : FalseValue;
 
 				if (!string.IsNullOrEmpty(path))
