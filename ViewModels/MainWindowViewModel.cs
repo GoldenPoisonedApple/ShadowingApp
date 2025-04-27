@@ -99,6 +99,12 @@ public partial class MainWindowViewModel : ViewModelBase
 	}
 
 
+	// 再生中かどうか
+	public bool IsPlaying
+	{
+		get => _waveOutDevice?.PlaybackState == PlaybackState.Playing;
+	}
+
 	// コマンド
 	// 音声ファイル選択コマンド
 	public ICommand SelectVoice { get; }
@@ -125,12 +131,14 @@ public partial class MainWindowViewModel : ViewModelBase
 		{
 			await SelectVoiceFile();
 			LoadAudioFile();
+			// 表示反映
+			this.RaisePropertyChanged(nameof(IsPlaying));
 		});
 
 		// 音声再生管理コマンド
 		PlayControlCommand = ReactiveCommand.Create(() =>
 		{
-			if (_waveOutDevice?.PlaybackState == PlaybackState.Playing)
+			if (IsPlaying)
 			{
 				PauseAudioFile();
 			}
@@ -138,9 +146,19 @@ public partial class MainWindowViewModel : ViewModelBase
 			{
 				PlayAudioFile();
 			}
+			// 表示反映
+			this.RaisePropertyChanged(nameof(IsPlaying));
 		});
 
 		// タイマーの初期化
+		InitializeTimer();
+
+		this.RaisePropertyChanged(nameof(IsPlaying));
+	}
+
+	// タイマー初期化
+	private void InitializeTimer()
+	{
 		_updateTimer = new System.Timers.Timer(TIMER_INTERVAL);
 		_updateTimer.Elapsed += (sender, e) =>
 		{
@@ -161,8 +179,6 @@ public partial class MainWindowViewModel : ViewModelBase
 			}
 		};
 	}
-
-
 
 	// 音声ファイル選択
 	private async Task SelectVoiceFile()

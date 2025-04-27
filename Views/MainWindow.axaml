@@ -4,6 +4,7 @@
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
+		xmlns:converters="using:ShadowingApp.Converters"
 		mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
 		Width="600" Height="400"
 		x:Class="ShadowingApp.Views.MainWindow"
@@ -23,6 +24,13 @@
 	</Window.KeyBindings>
 
 	<Window.Resources>
+		<!-- トグルの画像 -->
+    <converters:ToggleImageSourceConverter x:Key="PlayPauseImageConverter"
+																						TrueValue="avares://ShadowingApp/Assets/一時停止ボタン.png"
+																						FalseValue="avares://ShadowingApp/Assets/再生ボタン.png" />
+
+
+
 		<!-- Thumbの背景色を変更 -->
 		<SolidColorBrush x:Key="SliderThumbBackground" Color="{StaticResource AccentColor}" />
 		<SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="{StaticResource AccentColor}" />
@@ -102,7 +110,7 @@
 			</StackPanel>
 			<!-- 再生ボタン -->
 			<Button Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50" Padding="20" Command="{Binding PlayControlCommand}">
-				<Image Source="avares://ShadowingApp/Assets/再生ボタン.png" />
+				<Image Source="{Binding IsPlaying, Converter={StaticResource PlayPauseImageConverter}}" />
 			</Button>
 			<!-- 5秒スキップ -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
