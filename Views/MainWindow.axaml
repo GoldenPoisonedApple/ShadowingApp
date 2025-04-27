@@ -128,7 +128,5 @@
 			</StackPanel>
 		</StackPanel>
 
-		<!-- デバッグ用 -->
-		<TextBlock Margin="0 20 0 0" Text="{Binding DebugText}" Height="500" />
 	</StackPanel>
 	</Window>

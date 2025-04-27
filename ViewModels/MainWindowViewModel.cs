@@ -19,17 +19,6 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	private readonly System.Timers.Timer _updateTimer;
 	private const int TIMER_INTERVAL = 100;
 
-	// デバッグ用テキスト
-	private string _debugText = "Welcome to Avalonia!";
-	public string DebugText
-	{
-		get => _debugText;
-		private set
-		{
-			_debugText += "\n" + value;
-			this.RaisePropertyChanged(nameof(DebugText));
-		}
-	}
 
 	// 音声ファイルラベル
 	private string _selectedVoiceFileLabel = "音声ファイルを選択してください";
@@ -183,7 +172,6 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		{
 			// シークバー反映
 			TotalTime = _audioPlayer.TotalTime.TotalMilliseconds;
-			DebugText = _audioPlayer.TotalTime.ToString();
 
 			// ラベル表示
 			SelectedVoiceFileLabel = Path.GetFileName(_selectedVoiceFile);
