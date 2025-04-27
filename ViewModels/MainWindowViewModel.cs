@@ -57,12 +57,11 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	// シークバー値
 	public double CurrentTime
 	{
-		get => _audioPlayer.CurrentTime.TotalMilliseconds;
-		set
-		{
-			_audioPlayer.CurrentTime = TimeSpan.FromMilliseconds(value);
+		get {
 			UpdateSeekBar();
+			return _audioPlayer.CurrentTime.TotalMilliseconds;
 		}
+		set => _audioPlayer.CurrentTime = TimeSpan.FromMilliseconds(value);
 	}
 
 	private double _totalTime = 1;
@@ -87,32 +86,34 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	{
 		// 再生サービス
 		_audioPlayer = new AudioPlayerService();
+
+		// イベントハンドラー設定
 		_audioPlayer.PlaybackStateChanged += (_, _) =>
 		{
 			this.RaisePropertyChanged(nameof(IsPlaying));
-		};
-		_audioPlayer.PositionChanged += (_, _) =>
-		{
-			UpdateSeekBar();
-			this.RaisePropertyChanged(nameof(CurrentTime));
+
+			// 再生状態に応じてタイマーを制御
+			if (_audioPlayer.IsPlaying)
+				_updateTimer?.Start();
+			else
+				_updateTimer?.Stop();
 		};
 
 		// コマンド初期化
 		SelectVoiceCommand = ReactiveCommand.CreateFromTask(SelectVoiceFileAsync);
 		PlayControlCommand = ReactiveCommand.Create(TogglePlayback);
 
-		// タイマーの初期化
+		// タイマーはUIの更新だけを担当
 		_updateTimer = new System.Timers.Timer(TIMER_INTERVAL);
 		_updateTimer.Elapsed += (_, _) =>
 		{
 			Dispatcher.UIThread.Post(() =>
-							{
-					if (_audioPlayer.IsPlaying)
-					{
-						this.RaisePropertyChanged(nameof(CurrentTime));
-						UpdateSeekBar();
-					}
-				});
+			{
+				if (_audioPlayer.IsPlaying)
+				{
+					this.RaisePropertyChanged(nameof(CurrentTime));
+				}
+			});
 		};
 	}
 
@@ -182,7 +183,6 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		{
 			// シークバー反映
 			TotalTime = _audioPlayer.TotalTime.TotalMilliseconds;
-			UpdateSeekBar();
 			DebugText = _audioPlayer.TotalTime.ToString();
 
 			// ラベル表示
@@ -201,16 +201,12 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	private void PlayAudioFile()
 	{
 		_audioPlayer.Play();
-		_updateTimer.Start();
-		UpdateSeekBar();
 	}
 
 	// 音声一時停止
 	private void PauseAudioFile()
 	{
 		_audioPlayer.Pause();
-		_updateTimer.Stop();
-		UpdateSeekBar();
 	}
 
 	// シークバー反映

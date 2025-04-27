@@ -13,7 +13,6 @@ public class AudioPlayerService : IDisposable
 	private AudioFileReader? _audioFileReader;
 
 	public event EventHandler? PlaybackStateChanged;
-	public event EventHandler? PositionChanged;
 
 	public PlaybackState PlaybackState => _waveOutDevice?.PlaybackState ?? PlaybackState.Stopped;
 	public bool IsPlaying => PlaybackState == PlaybackState.Playing;
@@ -26,7 +25,6 @@ public class AudioPlayerService : IDisposable
 			if (_audioFileReader != null)
 			{
 				_audioFileReader.CurrentTime = value;
-				PositionChanged?.Invoke(this, EventArgs.Empty);
 			}
 		}
 	}
@@ -53,7 +51,6 @@ public class AudioPlayerService : IDisposable
 				PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
 			};
 
-			PositionChanged?.Invoke(this, EventArgs.Empty);
 			PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
 			return true;
 		}
@@ -84,7 +81,6 @@ public class AudioPlayerService : IDisposable
 		if (_audioFileReader != null)
 		{
 			_audioFileReader.Position = 0;
-			PositionChanged?.Invoke(this, EventArgs.Empty);
 		}
 		PlaybackStateChanged?.Invoke(this, EventArgs.Empty);
 	}
