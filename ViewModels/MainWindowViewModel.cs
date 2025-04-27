@@ -46,7 +46,8 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	// シークバー値
 	public double CurrentTime
 	{
-		get {
+		get
+		{
 			UpdateSeekBar();
 			return _audioPlayer.CurrentTime.TotalMilliseconds;
 		}
@@ -63,20 +64,27 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	// 再生中かどうか
 	public bool IsPlaying => _audioPlayer.IsPlaying;
 
-	// コマンド
-	public ICommand SelectVoiceCommand { get; }
-	public ICommand PlayControlCommand { get; }
+	private readonly AudioRecorderService _audioRecorder;
+	private string? _lastRecordedFile;
+
+	// 録音中かどうか
+	public bool IsRecording => _audioRecorder.IsRecording;
 
 	// 選択されたファイルパス
 	private string? _selectedVoiceFile;
+
+
+	// コマンド
+	public ICommand SelectVoiceCommand { get; }
+	public ICommand PlayControlCommand { get; }
+	public ICommand RecordControlCommand { get; }
+
 
 	// コンストラクタ
 	public MainWindowViewModel()
 	{
 		// 再生サービス
 		_audioPlayer = new AudioPlayerService();
-
-		// イベントハンドラー設定
 		_audioPlayer.PlaybackStateChanged += (_, _) =>
 		{
 			this.RaisePropertyChanged(nameof(IsPlaying));
@@ -88,9 +96,17 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 				_updateTimer?.Stop();
 		};
 
+		// 録音サービス
+		_audioRecorder = new AudioRecorderService();
+		_audioRecorder.RecordingStateChanged += (_, _) =>
+		{
+			this.RaisePropertyChanged(nameof(IsRecording));
+		};
+
 		// コマンド初期化
 		SelectVoiceCommand = ReactiveCommand.CreateFromTask(SelectVoiceFileAsync);
 		PlayControlCommand = ReactiveCommand.Create(TogglePlayback);
+		RecordControlCommand = ReactiveCommand.Create(ToggleRecording);
 
 		// タイマーはUIの更新だけを担当
 		_updateTimer = new System.Timers.Timer(TIMER_INTERVAL);
@@ -197,6 +213,67 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		_audioPlayer.Pause();
 	}
 
+	// 録音トグル処理
+	private void ToggleRecording()
+	{
+		if (IsRecording)
+		{
+			StopRecording();
+		}
+		else
+		{
+			StartRecording();
+		}
+	}
+
+	// 録音開始
+	private void StartRecording()
+	{
+		try
+		{
+			// アプリケーションのデータフォルダを取得
+			string recordingsFolder = Path.Combine(
+					Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+					"ShadowingApp", "Recordings");
+
+			// 録音開始
+			_lastRecordedFile = _audioRecorder.StartRecording(recordingsFolder);
+
+			// 再生中の場合は一時停止
+			if (IsPlaying)
+			{
+				PauseAudioFile();
+			}
+
+		}
+		catch (Exception ex)
+		{
+			// 録音開始に失敗した場合
+			SelectedVoiceFileLabel = $"録音開始エラー: {ex.Message}";
+		}
+	}
+
+	// 録音停止
+	private void StopRecording()
+	{
+		try
+		{
+			string? recordedFile = _audioRecorder.StopRecording();
+
+			if (!string.IsNullOrEmpty(recordedFile))
+			{
+				// 録音が成功した場合、録音ファイルを読み込む
+				_selectedVoiceFile = recordedFile;
+				LoadAudioFile();
+				SelectedVoiceFileLabel = $"録音ファイル: {Path.GetFileName(recordedFile)}";
+			}
+		}
+		catch (Exception ex)
+		{
+			SelectedVoiceFileLabel = $"録音停止エラー: {ex.Message}";
+		}
+	}
+
 	// シークバー反映
 	private void UpdateSeekBar()
 	{
@@ -223,5 +300,6 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		_updateTimer?.Stop();
 		_updateTimer?.Dispose();
 		_audioPlayer?.Dispose();
+    _audioRecorder?.Dispose();
 	}
 }
