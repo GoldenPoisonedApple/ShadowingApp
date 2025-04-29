@@ -66,7 +66,6 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	public bool IsPlaying => _audioPlayer.IsPlaying;
 
 	private readonly AudioRecorderService _audioRecorder;
-	private string? _RecordedFile;				
 	private readonly AudioPlayerService _recordAudioPlayer;
 
 	// 録音中かどうか
@@ -80,6 +79,8 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	public ICommand SelectVoiceCommand { get; }
 	public ICommand PlayControlCommand { get; }
 	public ICommand RecordControlCommand { get; }
+	public ICommand SkipBackwardCommand { get; }
+
 
 
 	// コンストラクタ
@@ -107,10 +108,13 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		// 録音音声再生サービス
 		_recordAudioPlayer = new AudioPlayerService();
 
+
+
 		// コマンド初期化
 		SelectVoiceCommand = ReactiveCommand.CreateFromTask(SelectVoiceFileAsync);
 		PlayControlCommand = ReactiveCommand.Create(TogglePlayback);
 		RecordControlCommand = ReactiveCommand.Create(ToggleRecording);
+		SkipBackwardCommand = ReactiveCommand.Create<object>(param => SkipBackward(int.Parse((string)param)));
 
 		// タイマーはUIの更新だけを担当
 		_updateTimer = new System.Timers.Timer(TIMER_INTERVAL);
@@ -134,6 +138,19 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 			LoadAudioFile();
 		}
 		this.RaisePropertyChanged(nameof(IsPlaying));
+	}
+
+
+	// バック
+	private void SkipBackward(int seconds)
+	{
+		double time = _audioPlayer.CurrentTime.TotalMilliseconds + (seconds * 1000);
+		if (time < 0) {
+			time = 0;
+		} else if (time > _audioPlayer.TotalTime.TotalMilliseconds) {
+			time = _audioPlayer.TotalTime.TotalMilliseconds;
+		}
+		CurrentTime = time;
 	}
 
 	private void TogglePlayback()
@@ -251,7 +268,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		_recordAudioPlayer.Stop();
 		_recordAudioPlayer.Dispose();
 		// 録音開始
-		_RecordedFile = _audioRecorder.StartRecording();
+		_audioRecorder.StartRecording();
 	}
 
 

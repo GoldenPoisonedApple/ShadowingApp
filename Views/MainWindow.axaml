@@ -91,7 +91,8 @@
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 			<!-- 30秒バック -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="42" Height="42" Padding="1">
+				<Button Background="Transparent" Width="42" Height="42" Padding="1"
+				Command="{Binding SkipBackwardCommand}" CommandParameter="-30">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
 						<Image.RenderTransform>
 							<ScaleTransform ScaleX="-1" />
@@ -102,7 +103,8 @@
 			</StackPanel>
 			<!-- 5秒バック -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="30" Height="30" Padding="1">
+				<Button Background="Transparent" Width="30" Height="30" Padding="1"
+				Command="{Binding SkipBackwardCommand}" CommandParameter="-5">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
 						<Image.RenderTransform>
 							<ScaleTransform ScaleX="-1" />
@@ -117,14 +119,16 @@
 			</Button>
 			<!-- 5秒スキップ -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="30" Height="30" Padding="1">
+				<Button Background="Transparent" Width="30" Height="30" Padding="1"
+				Command="{Binding SkipBackwardCommand}" CommandParameter="5">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
 				</Button>
 				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
 			</StackPanel>
 			<!-- 30秒スキップ -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="42" Height="42" Padding="1">
+				<Button Background="Transparent" Width="42" Height="42" Padding="1"
+				Command="{Binding SkipBackwardCommand}" CommandParameter="30">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
 				</Button>
 				<TextBlock HorizontalAlignment="Center" Text="30" FontSize="14"/>
