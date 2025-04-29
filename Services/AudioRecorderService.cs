@@ -11,6 +11,9 @@ namespace ShadowingApp.Services
 	{
 		private readonly string recordingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ShadowingApp", "Recordings");
 
+		private float _volumeMultiplier = 3.0f; // 音量増幅倍率（1.0fが標準、2.0fは2倍の音量）
+
+
 		private WaveInEvent? _waveIn;
 		private WaveFileWriter? _waveWriter;
 		private string? _outputFilePath;
@@ -54,6 +57,7 @@ namespace ShadowingApp.Services
 				// データ受信時のイベントハンドラを設定
 				_waveIn.DataAvailable += (s, e) =>
 				{
+					ApplyVolumeMultiplier(e.Buffer, e.BytesRecorded);
 					_waveWriter?.Write(e.Buffer, 0, e.BytesRecorded);
 				};
 
@@ -79,6 +83,35 @@ namespace ShadowingApp.Services
 			{
 				StopRecording();
 				throw;
+			}
+		}
+
+		/// <summary>
+		/// 音量を増幅する
+		/// </summary>
+		private void ApplyVolumeMultiplier(byte[] buffer, int bytesRecorded)
+		{
+			// 16ビットのPCMデータを想定（2バイトで1サンプル）
+			int sampleCount = bytesRecorded / 2;
+
+			for (int i = 0; i < sampleCount; i++)
+			{
+				// リトルエンディアンの16ビット値を取得
+				short sample = (short)((buffer[i * 2 + 1] << 8) | buffer[i * 2]);
+
+				// 音量を増幅
+				float multipliedSample = sample * _volumeMultiplier;
+
+				// クリッピングを防止（-32768～32767の範囲に収める）
+				if (multipliedSample > short.MaxValue)
+					multipliedSample = short.MaxValue;
+				else if (multipliedSample < short.MinValue)
+					multipliedSample = short.MinValue;
+
+				// 値を書き戻す
+				short adjustedSample = (short)multipliedSample;
+				buffer[i * 2] = (byte)(adjustedSample & 0xFF);
+				buffer[i * 2 + 1] = (byte)(adjustedSample >> 8);
 			}
 		}
 
