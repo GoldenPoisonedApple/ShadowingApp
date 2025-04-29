@@ -21,6 +21,7 @@
 	<!-- キーバインディングを追加 -->
 	<Window.KeyBindings>
 			<KeyBinding Gesture="Space" Command="{Binding PlayControlCommand}"/>
+			<KeyBinding Gesture="Enter" Command="{Binding RecordControlCommand}"/>
 	</Window.KeyBindings>
 
 	<Window.Resources>
