@@ -233,42 +233,25 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	// 録音再生
 	private void PlayRecording()
 	{
-		try
-		{
-			string? recordedFile = _audioRecorder.StopRecording();
-			_audioRecorder.Dispose();
+		string? recordedFile = _audioRecorder.StopRecording();
+		_audioRecorder.Dispose();
 
-			if (!string.IsNullOrEmpty(recordedFile))
-			{
-				// 録音が成功した場合、録音ファイルを読み込む
-				_recordAudioPlayer.LoadFile(recordedFile);
-				_recordAudioPlayer.Play();
-				SelectedVoiceFileLabel = $"録音ファイル: {Path.GetFileName(recordedFile)}";
-			}
-		}
-		catch (Exception ex)
+		if (!string.IsNullOrEmpty(recordedFile))
 		{
-			SelectedVoiceFileLabel = $"録音停止エラー: {ex.Message}";
+			// 録音が成功した場合、録音ファイルを読み込む
+			_recordAudioPlayer.LoadFile(recordedFile);
+			_recordAudioPlayer.Play();
 		}
 	}
 
 	// 録音開始
 	private void StartRecording()
 	{
-		try
-		{
-			// 再生中の場合停止
-			_recordAudioPlayer.Stop();
-			_recordAudioPlayer.Dispose();
-			// 録音開始
-			_RecordedFile = _audioRecorder.StartRecording();
-
-		}
-		catch (Exception ex)
-		{
-			// 録音開始に失敗した場合
-			SelectedVoiceFileLabel = $"録音開始エラー: {ex.Message}";
-		}
+		// 再生中の場合停止
+		_recordAudioPlayer.Stop();
+		_recordAudioPlayer.Dispose();
+		// 録音開始
+		_RecordedFile = _audioRecorder.StartRecording();
 	}
 
 

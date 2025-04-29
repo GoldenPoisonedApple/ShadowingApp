@@ -29,8 +29,8 @@
 										TrueValue="avares://ShadowingApp/Assets/一時停止ボタン.png"
 										FalseValue="avares://ShadowingApp/Assets/再生ボタン.png" />
     <converters:ToggleImageSourceConverter x:Key="RecordPlayImageConverter"
-										TrueValue="avares://ShadowingApp/Assets/マイクのアイコンその10.png"
-										FalseValue="avares://ShadowingApp/Assets/再生ボタン.png" />
+										TrueValue="avares://ShadowingApp/Assets/再生ボタン.png"
+										FalseValue="avares://ShadowingApp/Assets/マイクのアイコンその10.png" />
 
 
 		<!-- Thumbの背景色を変更 -->
