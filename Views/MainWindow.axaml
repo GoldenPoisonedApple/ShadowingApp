@@ -22,6 +22,10 @@
 	<Window.KeyBindings>
 			<KeyBinding Gesture="Space" Command="{Binding PlayControlCommand}"/>
 			<KeyBinding Gesture="Enter" Command="{Binding RecordControlCommand}"/>
+			<KeyBinding Gesture="Down" Command="{Binding SkipBackwardCommand}" CommandParameter="-30" />
+			<KeyBinding Gesture="Left" Command="{Binding SkipBackwardCommand}" CommandParameter="-5" />
+			<KeyBinding Gesture="Right" Command="{Binding SkipBackwardCommand}" CommandParameter="5" />
+			<KeyBinding Gesture="Up" Command="{Binding SkipBackwardCommand}" CommandParameter="30" />
 	</Window.KeyBindings>
 
 	<Window.Resources>
