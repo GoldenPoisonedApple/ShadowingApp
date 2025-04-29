@@ -9,6 +9,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using System.IO;
 using Avalonia.Threading;
 using ShadowingApp.Services;
+using System.Diagnostics;
 
 namespace ShadowingApp.ViewModels;
 
@@ -65,7 +66,8 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	public bool IsPlaying => _audioPlayer.IsPlaying;
 
 	private readonly AudioRecorderService _audioRecorder;
-	private string? _lastRecordedFile;
+	private string? _RecordedFile;				
+	private readonly AudioPlayerService _recordAudioPlayer;
 
 	// 録音中かどうか
 	public bool IsRecording => _audioRecorder.IsRecording;
@@ -102,6 +104,8 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		{
 			this.RaisePropertyChanged(nameof(IsRecording));
 		};
+		// 録音音声再生サービス
+		_recordAudioPlayer = new AudioPlayerService();
 
 		// コマンド初期化
 		SelectVoiceCommand = ReactiveCommand.CreateFromTask(SelectVoiceFileAsync);
@@ -218,11 +222,33 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	{
 		if (IsRecording)
 		{
-			StopRecording();
+			PlayRecording();
 		}
 		else
 		{
 			StartRecording();
+		}
+	}
+
+	// 録音再生
+	private void PlayRecording()
+	{
+		try
+		{
+			string? recordedFile = _audioRecorder.StopRecording();
+			_audioRecorder.Dispose();
+
+			if (!string.IsNullOrEmpty(recordedFile))
+			{
+				// 録音が成功した場合、録音ファイルを読み込む
+				_recordAudioPlayer.LoadFile(recordedFile);
+				_recordAudioPlayer.Play();
+				SelectedVoiceFileLabel = $"録音ファイル: {Path.GetFileName(recordedFile)}";
+			}
+		}
+		catch (Exception ex)
+		{
+			SelectedVoiceFileLabel = $"録音停止エラー: {ex.Message}";
 		}
 	}
 
@@ -231,19 +257,11 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	{
 		try
 		{
-			// アプリケーションのデータフォルダを取得
-			string recordingsFolder = Path.Combine(
-					Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-					"ShadowingApp", "Recordings");
-
+			// 再生中の場合停止
+			_recordAudioPlayer.Stop();
+			_recordAudioPlayer.Dispose();
 			// 録音開始
-			_lastRecordedFile = _audioRecorder.StartRecording();
-
-			// 再生中の場合は一時停止
-			if (IsPlaying)
-			{
-				PauseAudioFile();
-			}
+			_RecordedFile = _audioRecorder.StartRecording();
 
 		}
 		catch (Exception ex)
@@ -253,26 +271,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		}
 	}
 
-	// 録音停止
-	private void StopRecording()
-	{
-		try
-		{
-			string? recordedFile = _audioRecorder.StopRecording();
 
-			if (!string.IsNullOrEmpty(recordedFile))
-			{
-				// 録音が成功した場合、録音ファイルを読み込む
-				_selectedVoiceFile = recordedFile;
-				LoadAudioFile();
-				SelectedVoiceFileLabel = $"録音ファイル: {Path.GetFileName(recordedFile)}";
-			}
-		}
-		catch (Exception ex)
-		{
-			SelectedVoiceFileLabel = $"録音停止エラー: {ex.Message}";
-		}
-	}
 
 	// シークバー反映
 	private void UpdateSeekBar()
@@ -301,5 +300,6 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		_updateTimer?.Dispose();
 		_audioPlayer?.Dispose();
     _audioRecorder?.Dispose();
+		_recordAudioPlayer?.Dispose();
 	}
 }
