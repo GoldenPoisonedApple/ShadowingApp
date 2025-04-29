@@ -52,13 +52,71 @@
 	</Window.Resources>
 
 	<Window.Styles>
-		<!-- ボタンホバー -->
-		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="Blue" />
+		<!-- 基本スタイル - トランジションとTransformOriginの設定 -->
+		<Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Transitions">
+				<Setter.Value>
+					<Transitions>
+						<TransformOperationsTransition Property="RenderTransform" Easing="QuadraticEaseInOut" />
+					</Transitions>
+				</Setter.Value>
+			</Setter>
 		</Style>
-		<!-- ボタンクリック -->
+		<!-- ホバー -->
+		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="RenderTransform">
+				<Setter.Value>
+					<TransformGroup>
+						<ScaleTransform ScaleX="0.97" ScaleY="0.97" />
+					</TransformGroup>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<!-- クリック -->
 		<Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="Red" />
+			<Setter Property="RenderTransform">
+				<Setter.Value>
+					<TransformGroup>
+						<ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+					</TransformGroup>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<!-- アクセントボタン -->
+		<Style Selector="Button.AccentButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{StaticResource AccentBrush}" />
+		</Style>
+		<Style Selector="Button.AccentButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{StaticResource AccentBrush}" />
+		</Style>
+
+		<!-- 透明ボタン -->
+		<Style Selector="Button.TransparentButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="RenderTransform">
+				<Setter.Value>
+						<TransformGroup>
+							<ScaleTransform ScaleX="0.94" ScaleY="0.94" />
+						</TransformGroup>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style Selector="Button.TransparentButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="RenderTransform">
+				<Setter.Value>
+						<TransformGroup>
+							<ScaleTransform ScaleX="0.9" ScaleY="0.9" />
+						</TransformGroup>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<!-- 音声選択ボタン -->
+		<Style Selector="Button#SelectVoiceButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="MistyRose" />
+		</Style>
+		<Style Selector="Button#SelectVoiceButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="MistyRose" />
 		</Style>
 	</Window.Styles>
 
@@ -66,7 +124,7 @@
 	<StackPanel Margin="20">
 		<!-- 音声選択エリア -->
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-			<Button Background="MistyRose" Width="100" Height="40" CornerRadius="10" Command="{Binding SelectVoiceCommand}">
+			<Button x:Name="SelectVoiceButton" Background="MistyRose" Width="100" Height="40" CornerRadius="10" Command="{Binding SelectVoiceCommand}">
 				<StackPanel Orientation="Horizontal">
 					<Image Source="avares://ShadowingApp/Assets/音楽ファイルアイコン 1.png"/>
 					<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="選択" FontSize="18" VerticalAlignment="Center"/>
@@ -77,7 +135,7 @@
 
 		<!-- 音声表示エリア -->
 		<DockPanel Margin="0 15 0 0">
-			<Button DockPanel.Dock="Right" Margin="25 0 0 0" Background="{StaticResource AccentBrush}" Width="60" Height="60" CornerRadius="10" Padding="14" VerticalAlignment="Bottom"  Command="{Binding RecordControlCommand}">
+			<Button Classes="AccentButton" DockPanel.Dock="Right" Margin="25 0 0 0" Background="{StaticResource AccentBrush}" Width="60" Height="60" CornerRadius="10" Padding="14" VerticalAlignment="Bottom"  Command="{Binding RecordControlCommand}">
 				<Image Source="{Binding IsRecording, Converter={StaticResource RecordPlayImageConverter}}" />
 			</Button>
 			<Rectangle Height="160" Fill="LightGray"/>
@@ -95,7 +153,7 @@
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
 			<!-- 30秒バック -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="42" Height="42" Padding="1"
+				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
 				Command="{Binding SkipBackwardCommand}" CommandParameter="-30">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
 						<Image.RenderTransform>
@@ -107,7 +165,7 @@
 			</StackPanel>
 			<!-- 5秒バック -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="30" Height="30" Padding="1"
+				<Button Classes="TransparentButton" Background="Transparent" Width="30" Height="30" Padding="1"
 				Command="{Binding SkipBackwardCommand}" CommandParameter="-5">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
 						<Image.RenderTransform>
@@ -118,12 +176,12 @@
 				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
 			</StackPanel>
 			<!-- 再生ボタン -->
-			<Button Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50" Padding="20" Command="{Binding PlayControlCommand}">
+			<Button Classes="AccentButton" Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50" Padding="20" Command="{Binding PlayControlCommand}">
 				<Image Source="{Binding IsPlaying, Converter={StaticResource PlayPauseImageConverter}}" />
 			</Button>
 			<!-- 5秒スキップ -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="30" Height="30" Padding="1"
+				<Button Classes="TransparentButton" Background="Transparent" Width="30" Height="30" Padding="1"
 				Command="{Binding SkipBackwardCommand}" CommandParameter="5">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
 				</Button>
@@ -131,7 +189,7 @@
 			</StackPanel>
 			<!-- 30秒スキップ -->
 			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="42" Height="42" Padding="1"
+				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
 				Command="{Binding SkipBackwardCommand}" CommandParameter="30">
 					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
 				</Button>
