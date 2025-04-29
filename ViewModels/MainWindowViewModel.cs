@@ -237,7 +237,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 					"ShadowingApp", "Recordings");
 
 			// 録音開始
-			_lastRecordedFile = _audioRecorder.StartRecording(recordingsFolder);
+			_lastRecordedFile = _audioRecorder.StartRecording();
 
 			// 再生中の場合は一時停止
 			if (IsPlaying)

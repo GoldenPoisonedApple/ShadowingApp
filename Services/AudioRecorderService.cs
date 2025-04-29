@@ -9,6 +9,8 @@ namespace ShadowingApp.Services
 	/// </summary>
 	public class AudioRecorderService : IDisposable
 	{
+		private readonly string recordingsFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ShadowingApp", "Recordings");
+
 		private WaveInEvent? _waveIn;
 		private WaveFileWriter? _waveWriter;
 		private string? _outputFilePath;
@@ -20,9 +22,8 @@ namespace ShadowingApp.Services
 		/// <summary>
 		/// 録音開始
 		/// </summary>
-		/// <param name="outputFolder">出力フォルダ</param>
 		/// <returns>録音ファイルパス</returns>
-		public string StartRecording(string outputFolder)
+		public string StartRecording()
 		{
 			// すでに録音中の場合は停止
 			if (IsRecording)
@@ -33,14 +34,13 @@ namespace ShadowingApp.Services
 			try
 			{
 				// フォルダが存在しない場合は作成
-				if (!Directory.Exists(outputFolder))
+				if (!Directory.Exists(recordingsFolder))
 				{
-					Directory.CreateDirectory(outputFolder);
+					Directory.CreateDirectory(recordingsFolder);
 				}
 
-				// 出力ファイルパスの生成（現在時刻をファイル名に）
-				_outputFilePath = Path.Combine(outputFolder,
-						$"Recording_{DateTime.Now:yyyyMMdd_HHmmss}.wav");
+				// 出力ファイルパスの生成
+				_outputFilePath = Path.Combine(recordingsFolder, "Recording.wav");
 
 				// 録音デバイスの初期化
 				_waveIn = new WaveInEvent
