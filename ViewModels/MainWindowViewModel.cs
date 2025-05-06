@@ -209,6 +209,8 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		{
 			// シークバー反映
 			TotalTime = _audioPlayer.TotalTime.TotalMilliseconds;
+			CurrentTime = 0;
+			this.RaisePropertyChanged(nameof(CurrentTime));
 
 			// ラベル表示
 			SelectedVoiceFileLabel = Path.GetFileName(_selectedVoiceFile);
