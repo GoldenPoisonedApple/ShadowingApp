@@ -151,6 +151,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 			time = _audioPlayer.TotalTime.TotalMilliseconds;
 		}
 		CurrentTime = time;
+		this.RaisePropertyChanged(nameof(CurrentTime));
 	}
 
 	private void TogglePlayback()
