@@ -5,7 +5,7 @@
 			xmlns:converters="using:ShadowingApp.Converters"
 			xmlns:vm="using:ShadowingApp.ViewModels"
 			x:DataType="vm:MainWindowViewModel"
-			x:Class="ShadowingApp.Controls.AudioControls">
+			x:Class="ShadowingApp.Views.Components.AudioControls">
 
 	<UserControl.Resources>
 		<converters:ToggleImageSourceConverter x:Key="PlayPauseImageConverter"

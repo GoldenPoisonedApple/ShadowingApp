@@ -4,7 +4,7 @@
 			xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			xmlns:vm="using:ShadowingApp.ViewModels"
 			x:DataType="vm:MainWindowViewModel"
-			x:Class="ShadowingApp.Controls.AudioSeekBar">
+			x:Class="ShadowingApp.Views.Components.AudioSeekBar">
 	
 	<!-- シークバー -->
 	<DockPanel>

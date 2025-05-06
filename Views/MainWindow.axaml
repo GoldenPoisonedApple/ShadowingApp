@@ -3,7 +3,7 @@
 		xmlns:vm="using:ShadowingApp.ViewModels"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:controls="using:ShadowingApp.Controls"
+        xmlns:controls="using:ShadowingApp.Views.Components"
 		xmlns:converters="using:ShadowingApp.Converters"
 		mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
 		Width="600" Height="400"

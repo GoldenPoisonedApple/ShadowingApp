@@ -2,11 +2,11 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 
-namespace ShadowingApp.Controls;
+namespace ShadowingApp.Views.Components;
 
-public partial class AudioControls : UserControl
+public partial class AudioSeekBar : UserControl
 {
-	public AudioControls()
+	public AudioSeekBar()
 	{
 		InitializeComponent();
 	}
