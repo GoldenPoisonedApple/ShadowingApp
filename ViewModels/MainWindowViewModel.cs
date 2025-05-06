@@ -10,6 +10,8 @@ using System.IO;
 using Avalonia.Threading;
 using ShadowingApp.Services;
 using System.Diagnostics;
+using Avalonia.Rendering;
+using System.Runtime.CompilerServices;
 
 namespace ShadowingApp.ViewModels;
 
@@ -113,7 +115,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		// コマンド初期化
 		SelectVoiceCommand = ReactiveCommand.CreateFromTask(SelectVoiceFileAsync);
 		PlayControlCommand = ReactiveCommand.Create(TogglePlayback);
-		RecordControlCommand = ReactiveCommand.Create(ToggleRecording);
+		RecordControlCommand = ReactiveCommand.CreateFromTask(ToggleRecording);
 		SkipBackwardCommand = ReactiveCommand.Create<object>(param => SkipBackward(int.Parse((string)param)));
 
 		// タイマーはUIの更新だけを担当
@@ -238,11 +240,11 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	}
 
 	// 録音トグル処理
-	private void ToggleRecording()
+	private async Task ToggleRecording()
 	{
 		if (IsRecording)
 		{
-			PlayRecording();
+			await PlayRecording();
 		}
 		else
 		{
@@ -251,10 +253,12 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	}
 
 	// 録音再生
-	private void PlayRecording()
+	private async Task PlayRecording()
 	{
 		string? recordedFile = _audioRecorder.StopRecording();
 		_audioRecorder.Dispose();
+
+		await Task.Delay(400);
 
 		if (!string.IsNullOrEmpty(recordedFile))
 		{

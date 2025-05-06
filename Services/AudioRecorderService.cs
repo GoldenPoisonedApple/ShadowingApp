@@ -125,6 +125,9 @@ namespace ShadowingApp.Services
 				return null;
 
 			_waveIn?.StopRecording();
+			IsRecording = false;
+			RecordingStateChanged?.Invoke(this, EventArgs.Empty);
+
 
 			// RecordingStoppedイベントハンドラで後処理が行われる
 			return _outputFilePath;
