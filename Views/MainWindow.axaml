@@ -3,7 +3,7 @@
 		xmlns:vm="using:ShadowingApp.ViewModels"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
+        xmlns:controls="using:ShadowingApp.Controls"
 		xmlns:converters="using:ShadowingApp.Converters"
 		mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
 		Width="600" Height="400"
@@ -20,12 +20,12 @@
 
 	<!-- キーバインディングを追加 -->
 	<Window.KeyBindings>
-			<KeyBinding Gesture="Space" Command="{Binding PlayControlCommand}"/>
-			<KeyBinding Gesture="Enter" Command="{Binding RecordControlCommand}"/>
-			<KeyBinding Gesture="Down" Command="{Binding SkipBackwardCommand}" CommandParameter="-30" />
-			<KeyBinding Gesture="Left" Command="{Binding SkipBackwardCommand}" CommandParameter="-5" />
-			<KeyBinding Gesture="Right" Command="{Binding SkipBackwardCommand}" CommandParameter="5" />
-			<KeyBinding Gesture="Up" Command="{Binding SkipBackwardCommand}" CommandParameter="30" />
+		<KeyBinding Gesture="Space" Command="{Binding PlayControlCommand}"/>
+		<KeyBinding Gesture="Enter" Command="{Binding RecordControlCommand}"/>
+		<KeyBinding Gesture="Down" Command="{Binding SkipBackwardCommand}" CommandParameter="-30" />
+		<KeyBinding Gesture="Left" Command="{Binding SkipBackwardCommand}" CommandParameter="-5" />
+		<KeyBinding Gesture="Right" Command="{Binding SkipBackwardCommand}" CommandParameter="5" />
+		<KeyBinding Gesture="Up" Command="{Binding SkipBackwardCommand}" CommandParameter="30" />
 	</Window.KeyBindings>
 
 	<Window.Resources>
@@ -61,59 +61,12 @@
 
 		<!-- シークバー -->
 		<DockPanel>
-			<!-- {Binding #slider.Value} -->
 			<Slider DockPanel.Dock="Top" Margin="0 10 0 0" Maximum="{Binding TotalTime}" Value="{Binding CurrentTime}" />
 			<TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left" Text="{Binding ElapsedLabel}" FontSize="14" Margin="0 -10 0 0" />
 			<TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Text="{Binding RemainingLabel}" FontSize="14"  Margin="0 -10 0 0" />
 		</DockPanel>
 
 		<!-- コントロールエリア -->
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-			<!-- 30秒バック -->
-			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
-				Command="{Binding SkipBackwardCommand}" CommandParameter="-30">
-					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
-						<Image.RenderTransform>
-							<ScaleTransform ScaleX="-1" />
-						</Image.RenderTransform>
-					</Image>
-				</Button>
-				<TextBlock HorizontalAlignment="Center" Text="30" FontSize="14"/>
-			</StackPanel>
-			<!-- 5秒バック -->
-			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Classes="TransparentButton" Background="Transparent" Width="30" Height="30" Padding="1"
-				Command="{Binding SkipBackwardCommand}" CommandParameter="-5">
-					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
-						<Image.RenderTransform>
-							<ScaleTransform ScaleX="-1" />
-						</Image.RenderTransform>
-					</Image>
-				</Button>
-				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
-			</StackPanel>
-			<!-- 再生ボタン -->
-			<Button Classes="AccentButton" Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50" Padding="20" Command="{Binding PlayControlCommand}">
-				<Image Source="{Binding IsPlaying, Converter={StaticResource PlayPauseImageConverter}}" />
-			</Button>
-			<!-- 5秒スキップ -->
-			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Classes="TransparentButton" Background="Transparent" Width="30" Height="30" Padding="1"
-				Command="{Binding SkipBackwardCommand}" CommandParameter="5">
-					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
-				</Button>
-				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
-			</StackPanel>
-			<!-- 30秒スキップ -->
-			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
-				Command="{Binding SkipBackwardCommand}" CommandParameter="30">
-					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
-				</Button>
-				<TextBlock HorizontalAlignment="Center" Text="30" FontSize="14"/>
-			</StackPanel>
-		</StackPanel>
-
+		<controls:AudioControls />
 	</StackPanel>
-	</Window>
+</Window>
