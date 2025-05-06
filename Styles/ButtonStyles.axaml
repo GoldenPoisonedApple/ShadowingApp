@@ -1,0 +1,72 @@
+<Styles xmlns="https://github.com/avaloniaui"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+	<!-- 基本スタイル - トランジションとTransformOriginの設定 -->
+	<Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Transitions">
+			<Setter.Value>
+				<Transitions>
+					<TransformOperationsTransition Property="RenderTransform" Easing="QuadraticEaseInOut" />
+				</Transitions>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<!-- ホバー -->
+	<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="RenderTransform">
+			<Setter.Value>
+				<TransformGroup>
+					<ScaleTransform ScaleX="0.97" ScaleY="0.97" />
+				</TransformGroup>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<!-- クリック -->
+	<Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="RenderTransform">
+			<Setter.Value>
+				<TransformGroup>
+					<ScaleTransform ScaleX="0.95" ScaleY="0.95" />
+				</TransformGroup>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<!-- アクセントボタン -->
+	<Style Selector="Button.AccentButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource AccentBrush}" />
+	</Style>
+	<Style Selector="Button.AccentButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="{StaticResource AccentBrush}" />
+	</Style>
+
+	<!-- 透明ボタン -->
+	<Style Selector="Button.TransparentButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="RenderTransform">
+			<Setter.Value>
+				<TransformGroup>
+					<ScaleTransform ScaleX="0.94" ScaleY="0.94" />
+				</TransformGroup>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<Style Selector="Button.TransparentButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="RenderTransform">
+			<Setter.Value>
+				<TransformGroup>
+					<ScaleTransform ScaleX="0.9" ScaleY="0.9" />
+				</TransformGroup>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<!-- 音声選択ボタン -->
+	<Style Selector="Button#SelectVoiceButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="MistyRose" />
+	</Style>
+	<Style Selector="Button#SelectVoiceButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
+		<Setter Property="Background" Value="MistyRose" />
+	</Style>
+</Styles>

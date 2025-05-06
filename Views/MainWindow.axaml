@@ -30,95 +30,13 @@
 
 	<Window.Resources>
 		<!-- トグルの画像 -->
-    <converters:ToggleImageSourceConverter x:Key="PlayPauseImageConverter"
-										TrueValue="avares://ShadowingApp/Assets/一時停止ボタン.png"
-										FalseValue="avares://ShadowingApp/Assets/再生ボタン.png" />
-    <converters:ToggleImageSourceConverter x:Key="RecordPlayImageConverter"
-										TrueValue="avares://ShadowingApp/Assets/再生ボタン.png"
-										FalseValue="avares://ShadowingApp/Assets/マイクのアイコンその10.png" />
-
-
-		<!-- Thumbの背景色を変更 -->
-		<SolidColorBrush x:Key="SliderThumbBackground" Color="{StaticResource AccentColor}" />
-		<SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="{StaticResource AccentColor}" />
-		<SolidColorBrush x:Key="SliderThumbBackgroundPressed" Color="{StaticResource AccentColor}" />
-		<!-- スライダーの値トラック色（進行した部分）を変更 -->
-		<SolidColorBrush x:Key="SliderTrackValueFill" Color="{StaticResource AccentColor}" />
-		<SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="{StaticResource AccentColor}" />
-		<SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="{StaticResource AccentColor}" />
-		<!-- Thumbのサイズを変更 -->
-		<x:Double x:Key="SliderHorizontalThumbWidth">12</x:Double>  <!-- 横向きスライダーのThumb幅 -->
-		<x:Double x:Key="SliderHorizontalThumbHeight">12</x:Double> <!-- 横向きスライダーのThumb高さ -->
+		<converters:ToggleImageSourceConverter x:Key="PlayPauseImageConverter"
+											TrueValue="avares://ShadowingApp/Assets/一時停止ボタン.png"
+											FalseValue="avares://ShadowingApp/Assets/再生ボタン.png" />
+		<converters:ToggleImageSourceConverter x:Key="RecordPlayImageConverter"
+											TrueValue="avares://ShadowingApp/Assets/再生ボタン.png"
+											FalseValue="avares://ShadowingApp/Assets/マイクのアイコンその10.png" />
 	</Window.Resources>
-
-	<Window.Styles>
-		<!-- 基本スタイル - トランジションとTransformOriginの設定 -->
-		<Style Selector="Button /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Transitions">
-				<Setter.Value>
-					<Transitions>
-						<TransformOperationsTransition Property="RenderTransform" Easing="QuadraticEaseInOut" />
-					</Transitions>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<!-- ホバー -->
-		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="RenderTransform">
-				<Setter.Value>
-					<TransformGroup>
-						<ScaleTransform ScaleX="0.97" ScaleY="0.97" />
-					</TransformGroup>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<!-- クリック -->
-		<Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="RenderTransform">
-				<Setter.Value>
-					<TransformGroup>
-						<ScaleTransform ScaleX="0.95" ScaleY="0.95" />
-					</TransformGroup>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<!-- アクセントボタン -->
-		<Style Selector="Button.AccentButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="{StaticResource AccentBrush}" />
-		</Style>
-		<Style Selector="Button.AccentButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="{StaticResource AccentBrush}" />
-		</Style>
-
-		<!-- 透明ボタン -->
-		<Style Selector="Button.TransparentButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="RenderTransform">
-				<Setter.Value>
-						<TransformGroup>
-							<ScaleTransform ScaleX="0.94" ScaleY="0.94" />
-						</TransformGroup>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<Style Selector="Button.TransparentButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="RenderTransform">
-				<Setter.Value>
-						<TransformGroup>
-							<ScaleTransform ScaleX="0.9" ScaleY="0.9" />
-						</TransformGroup>
-				</Setter.Value>
-			</Setter>
-		</Style>
-		<!-- 音声選択ボタン -->
-		<Style Selector="Button#SelectVoiceButton:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="MistyRose" />
-		</Style>
-		<Style Selector="Button#SelectVoiceButton:pressed /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="MistyRose" />
-		</Style>
-	</Window.Styles>
 
 	<!-- Body -->
 	<StackPanel Margin="20">
