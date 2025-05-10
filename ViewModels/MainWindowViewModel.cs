@@ -11,6 +11,7 @@ using Avalonia.Threading;
 using ShadowingApp.Services;
 using System.Diagnostics;
 using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using Avalonia.Rendering;
 using System.Runtime.CompilerServices;
 
@@ -47,16 +48,16 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		set => this.RaiseAndSetIfChanged(ref _remainingLabel, value);
 	}
 
-	    // アルバムアート用のプロパティ
-    private Bitmap? _albumArt;
-    public Bitmap? AlbumArt
-    {
-        get => _albumArt;
-        set => this.RaiseAndSetIfChanged(ref _albumArt, value);
-    }
+	// アルバムアート用のプロパティ
+	private Bitmap? _albumArt;
+	public Bitmap? AlbumArt
+	{
+		get => _albumArt;
+		set => this.RaiseAndSetIfChanged(ref _albumArt, value);
+	}
 
-    // デフォルトの画像
-    private readonly Bitmap? _defaultAlbumArt = new Bitmap("Assets/音楽ファイルアイコン 1.png");
+	// デフォルトの画像
+	private readonly Bitmap? _defaultAlbumArt = new Bitmap(AssetLoader.Open(new Uri("avares://ShadowingApp/Assets/音楽ファイルアイコン 1.png")));
 
 
 	// シークバー値
