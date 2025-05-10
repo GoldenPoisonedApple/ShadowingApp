@@ -265,12 +265,36 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 
 	// 音声次へ
 	private void SkipAudioFile () {
-		Debug.WriteLine("Skip");
+		if (string.IsNullOrEmpty(_selectedVoiceFile))
+			return;
+			
+		string nextFile = FileSequenceNavigator.NextAudioPath(_selectedVoiceFile);
+		if (!string.IsNullOrEmpty(nextFile))
+		{
+			_selectedVoiceFile = nextFile;
+			LoadAudioFile();
+			if (!IsPlaying)
+			{
+				PlayAudioFile();
+			}
+		}
 	}
 
 	// 音声前へ
 	private void PriviousAudioFile () {
-		Debug.WriteLine("Privious");
+		if (string.IsNullOrEmpty(_selectedVoiceFile))
+			return;
+			
+		string prevFile = FileSequenceNavigator.PreviousAudioPath(_selectedVoiceFile);
+		if (!string.IsNullOrEmpty(prevFile))
+		{
+			_selectedVoiceFile = prevFile;
+			LoadAudioFile();
+			if (!IsPlaying)
+			{
+				PlayAudioFile();
+			}
+		}
 	}
 
 
