@@ -11,7 +11,7 @@ namespace ShadowingApp.Services
 	public class FileSequenceNavigator
 	{
 		// サポートする音声ファイル拡張子
-		private static readonly string[] SupportedExtensions = { ".mp3", ".wav" };
+		private static readonly string[] SupportedExtensions = {".mp3", ".wav"};
 
 		/// <summary>
 		/// 現在のファイルから同じフォルダ内の次の音声ファイル（名前順）を取得します
