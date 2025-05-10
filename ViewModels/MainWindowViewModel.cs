@@ -10,6 +10,7 @@ using System.IO;
 using Avalonia.Threading;
 using ShadowingApp.Services;
 using System.Diagnostics;
+using Avalonia.Media.Imaging;
 using Avalonia.Rendering;
 using System.Runtime.CompilerServices;
 
@@ -45,6 +46,18 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		get => _remainingLabel;
 		set => this.RaiseAndSetIfChanged(ref _remainingLabel, value);
 	}
+
+	    // アルバムアート用のプロパティ
+    private Bitmap? _albumArt;
+    public Bitmap? AlbumArt
+    {
+        get => _albumArt;
+        set => this.RaiseAndSetIfChanged(ref _albumArt, value);
+    }
+
+    // デフォルトの画像
+    private readonly Bitmap? _defaultAlbumArt = new Bitmap("Assets/音楽ファイルアイコン 1.png");
+
 
 	// シークバー値
 	public double CurrentTime
@@ -112,7 +125,8 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		// 録音音声再生サービス
 		_recordAudioPlayer = new AudioPlayerService();
 
-
+		// デフォルトのアルバムアート画像の読み込み
+		AlbumArt = _defaultAlbumArt;
 
 		// コマンド初期化
 		SelectVoiceCommand = ReactiveCommand.CreateFromTask(SelectVoiceFileAsync);
@@ -221,6 +235,9 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 
 			// ラベル表示
 			SelectedVoiceFileLabel = Path.GetFileName(_selectedVoiceFile);
+
+			// アルバムアート取得
+			LoadAlbumArt(_selectedVoiceFile);
 		}
 		else
 		{
@@ -228,6 +245,21 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 			ElapsedLabel = "--:--";
 			RemainingLabel = "--:--";
 			SelectedVoiceFileLabel = "音声ファイルを読み込めませんでした";
+			AlbumArt = _defaultAlbumArt;
+		}
+	}
+
+	// アルバムアート取得処理
+	private void LoadAlbumArt(string audioFilePath)
+	{
+		var albumArt = AlbumArtService.GetAlbumArt(audioFilePath);
+		if (albumArt != null)
+		{
+			AlbumArt = albumArt;
+		}
+		else
+		{
+			AlbumArt = _defaultAlbumArt;
 		}
 	}
 
@@ -323,5 +355,7 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		_audioPlayer?.Dispose();
     _audioRecorder?.Dispose();
 		_recordAudioPlayer?.Dispose();
+		_albumArt?.Dispose();
+		_defaultAlbumArt?.Dispose();
 	}
 }

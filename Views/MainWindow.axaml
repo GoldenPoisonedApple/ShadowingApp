@@ -63,7 +63,7 @@
 					</Image>
 				</Button>
 				<!-- アルバム画像 -->
-				<Image Source="D:\pictures\SW-Wallpaper1-HD.jpg" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 20 0"/>
+				<Image Source="{Binding AlbumArt}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 20 0"/>
 				<!-- 前の曲へ -->
 				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
 					Command="{Binding NextAudioCommand}">
