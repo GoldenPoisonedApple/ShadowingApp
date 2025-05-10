@@ -54,7 +54,8 @@
 			</Button>
 			<StackPanel Height="160" Background="AliceBlue" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
 				<!-- 前の曲へ -->
-				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1">
+				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
+					Command="{Binding PreviousAudioCommand}">
 					<Image Source="avares://ShadowingApp/Assets/早送りボタン.png">
 						<Image.RenderTransform>
 							<ScaleTransform ScaleX="-1" />
@@ -64,7 +65,8 @@
 				<!-- アルバム画像 -->
 				<Image Source="D:\pictures\SW-Wallpaper1-HD.jpg" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 20 0"/>
 				<!-- 前の曲へ -->
-				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1">
+				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
+					Command="{Binding NextAudioCommand}">
 					<Image Source="avares://ShadowingApp/Assets/早送りボタン.png" />
 				</Button>
 			</StackPanel>

@@ -82,6 +82,8 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 	public ICommand PlayControlCommand { get; }
 	public ICommand RecordControlCommand { get; }
 	public ICommand SkipBackwardCommand { get; }
+	public ICommand PreviousAudioCommand { get; }
+	public ICommand NextAudioCommand { get; }
 
 
 
@@ -117,6 +119,8 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 		PlayControlCommand = ReactiveCommand.Create(TogglePlayback);
 		RecordControlCommand = ReactiveCommand.CreateFromTask(ToggleRecording);
 		SkipBackwardCommand = ReactiveCommand.Create<object>(param => SkipBackward(int.Parse((string)param)));
+		PreviousAudioCommand = ReactiveCommand.Create(PriviousAudioFile);
+		NextAudioCommand = ReactiveCommand.Create(SkipAudioFile);
 
 		// タイマーはUIの更新だけを担当
 		_updateTimer = new System.Timers.Timer(TIMER_INTERVAL);
@@ -226,6 +230,17 @@ public class MainWindowViewModel : ViewModelBase, IDisposable
 			SelectedVoiceFileLabel = "音声ファイルを読み込めませんでした";
 		}
 	}
+
+	// 音声次へ
+	private void SkipAudioFile () {
+		Debug.WriteLine("Skip");
+	}
+
+	// 音声前へ
+	private void PriviousAudioFile () {
+		Debug.WriteLine("Privious");
+	}
+
 
 	// 音声再生
 	private void PlayAudioFile()
