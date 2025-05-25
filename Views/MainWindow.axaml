@@ -3,7 +3,8 @@
 		xmlns:vm="using:ShadowingApp.ViewModels"
 		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-		xmlns:controls="clr-namespace:Avalonia.Controls;assembly=Avalonia.Controls"
+        xmlns:controls="using:ShadowingApp.Views.Components"
+		xmlns:converters="using:ShadowingApp.Converters"
 		mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
 		Width="600" Height="400"
 		x:Class="ShadowingApp.Views.MainWindow"
@@ -17,107 +18,64 @@
 		<vm:MainWindowViewModel/>
 	</Design.DataContext>
 
-	<Window.Resources>
-		<!-- Thumbの背景色を変更 -->
-		<SolidColorBrush x:Key="SliderThumbBackground" Color="{StaticResource AccentColor}" />
-		<SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="{StaticResource AccentColor}" />
-		<SolidColorBrush x:Key="SliderThumbBackgroundPressed" Color="{StaticResource AccentColor}" />
-		<!-- スライダーの値トラック色（進行した部分）を変更 -->
-		<SolidColorBrush x:Key="SliderTrackValueFill" Color="{StaticResource AccentColor}" />
-		<SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="{StaticResource AccentColor}" />
-		<SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="{StaticResource AccentColor}" />
-		<!-- Thumbのサイズを変更 -->
-		<x:Double x:Key="SliderHorizontalThumbWidth">12</x:Double>  <!-- 横向きスライダーのThumb幅 -->
-		<x:Double x:Key="SliderHorizontalThumbHeight">12</x:Double> <!-- 横向きスライダーのThumb高さ -->
+	<!-- キーバインディングを追加 -->
+	<Window.KeyBindings>
+		<KeyBinding Gesture="Space" Command="{Binding PlayControlCommand}"/>
+		<KeyBinding Gesture="Enter" Command="{Binding RecordControlCommand}"/>
+		<KeyBinding Gesture="Down" Command="{Binding SkipBackwardCommand}" CommandParameter="-30" />
+		<KeyBinding Gesture="Left" Command="{Binding SkipBackwardCommand}" CommandParameter="-5" />
+		<KeyBinding Gesture="Right" Command="{Binding SkipBackwardCommand}" CommandParameter="5" />
+		<KeyBinding Gesture="Up" Command="{Binding SkipBackwardCommand}" CommandParameter="30" />
+	</Window.KeyBindings>
 
+	<Window.Resources>
+		<converters:ToggleImageSourceConverter x:Key="RecordPlayImageConverter"
+											TrueValue="avares://ShadowingApp/Assets/再生ボタン.png"
+											FalseValue="avares://ShadowingApp/Assets/マイクのアイコンその10.png" />
 	</Window.Resources>
 
-	<Window.Styles>
-		<!-- ボタンホバー -->
-		<Style Selector="Button:pointerover /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="Blue" />
-		</Style>
-		<!-- ボタンクリック -->
-		<Style Selector="Button:pressed /template/ ContentPresenter#PART_ContentPresenter">
-			<Setter Property="Background" Value="Red" />
-		</Style>
-	</Window.Styles>
-
-	
+	<!-- Body -->
 	<StackPanel Margin="20">
 		<!-- 音声選択エリア -->
 		<StackPanel Orientation="Horizontal" VerticalAlignment="Top">
-			<Button Background="MistyRose" Width="100" Height="40" CornerRadius="10">
+			<Button x:Name="SelectVoiceButton" Background="MistyRose" Width="100" Height="40" CornerRadius="10" Command="{Binding SelectVoiceCommand}">
 				<StackPanel Orientation="Horizontal">
 					<Image Source="avares://ShadowingApp/Assets/音楽ファイルアイコン 1.png"/>
 					<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="選択" FontSize="18" VerticalAlignment="Center"/>
 				</StackPanel>
 			</Button>
-			<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="音声データ" FontSize="15" VerticalAlignment="Center"/>
+			<TextBlock Margin="10 0" HorizontalAlignment="Right" Text="{Binding SelectedVoiceFileLabel}" FontSize="15" VerticalAlignment="Center"/>
 		</StackPanel>
 
 		<!-- 音声表示エリア -->
 		<DockPanel Margin="0 15 0 0">
-			<Button DockPanel.Dock="Right" Margin="25 0 0 0" Background="{StaticResource AccentBrush}" Width="60" Height="60" CornerRadius="10" Padding="14" VerticalAlignment="Bottom">
-				<Image Source="avares://ShadowingApp/Assets/マイクのアイコンその10.png"/>
+			<Button Classes="AccentButton" DockPanel.Dock="Right" Margin="25 0 0 0" Background="{StaticResource AccentBrush}" Width="60" Height="60" CornerRadius="10" Padding="14" VerticalAlignment="Bottom"  Command="{Binding RecordControlCommand}">
+				<Image Source="{Binding IsRecording, Converter={StaticResource RecordPlayImageConverter}}" />
 			</Button>
-			<Rectangle Height="160" Fill="LightGray"/>
+			<StackPanel Height="160" Background="Transparent" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+				<!-- 前の曲へ -->
+				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
+					Command="{Binding PreviousAudioCommand}">
+					<Image Source="avares://ShadowingApp/Assets/早送りボタン.png">
+						<Image.RenderTransform>
+							<ScaleTransform ScaleX="-1" />
+						</Image.RenderTransform>
+					</Image>
+				</Button>
+				<!-- アルバム画像 -->
+				<Image Source="{Binding AlbumArt}" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20 0 20 0"/>
+				<!-- 前の曲へ -->
+				<Button Classes="TransparentButton" Background="Transparent" Width="42" Height="42" Padding="1"
+					Command="{Binding NextAudioCommand}">
+					<Image Source="avares://ShadowingApp/Assets/早送りボタン.png" />
+				</Button>
+			</StackPanel>
 		</DockPanel>
 
 		<!-- シークバー -->
-		<DockPanel>
-			<!-- {Binding #slider.Value} -->
-			<Slider DockPanel.Dock="Top" Margin="0 10 0 0" />
-			<TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left" Text="17:23" FontSize="14" Margin="0 -10 0 0" />
-			<TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Text="-13:02" FontSize="14"  Margin="0 -10 0 0" />
-		</DockPanel>
+		<controls:AudioSeekBar />
 
 		<!-- コントロールエリア -->
-		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="42" Height="42" Padding="1">
-					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
-						<Image.RenderTransform>
-							<ScaleTransform ScaleX="-1" />
-						</Image.RenderTransform>
-					</Image>
-				</Button>
-				<TextBlock HorizontalAlignment="Center" Text="30" FontSize="14"/>
-			</StackPanel>
-			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="30" Height="30" Padding="1">
-					<Image Source="avares://ShadowingApp/Assets/共有矢印.png">
-						<Image.RenderTransform>
-							<ScaleTransform ScaleX="-1" />
-						</Image.RenderTransform>
-					</Image>
-				</Button>
-				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
-			</StackPanel>
-			<Button Margin="15 0 15 0" Background="{StaticResource AccentBrush}" Width="70" Height="70" CornerRadius="50">
-				<Path Fill="White" StrokeThickness="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="6 0 0 0">
-					<Path.Data>
-						<PathGeometry>
-							<PathFigure StartPoint="0,0" IsClosed="True">
-								<LineSegment Point="22, 15"/>
-								<LineSegment Point="0,30"/>
-							</PathFigure>
-						</PathGeometry>
-					</Path.Data>
-				</Path>
-			</Button>
-			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="30" Height="30" Padding="1">
-					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
-				</Button>
-				<TextBlock HorizontalAlignment="Center" Text="5" FontSize="14"/>
-			</StackPanel>
-			<StackPanel Margin="15 0 15 0" Orientation="Vertical" VerticalAlignment="Bottom">
-				<Button Background="Transparent" Width="42" Height="42" Padding="1">
-					<Image Source="avares://ShadowingApp/Assets/共有矢印.png" />
-				</Button>
-				<TextBlock HorizontalAlignment="Center" Text="30" FontSize="14"/>
-			</StackPanel>
-		</StackPanel>
+		<controls:AudioControls />
 	</StackPanel>
-	</Window>
+</Window>

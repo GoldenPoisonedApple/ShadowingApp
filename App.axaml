@@ -6,13 +6,12 @@
 			<!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
 
 	<Application.Resources>
-		<!-- アプリケーション全体の色定義 -->
-        <Color x:Key="PrimaryColor">#ff0033</Color>
-		<Color x:Key="AccentColor">#AE2525</Color>
-
-		<!-- SolidColorBrushの定義 -->
-		<SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource PrimaryColor}" />
-		<SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<!-- スタイル読み込み -->
+				<ResourceInclude Source="/Styles/Colors.axaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</Application.Resources>
 
 	<Application.DataTemplates>
@@ -21,5 +20,7 @@
 
 	<Application.Styles>
 		<FluentTheme />
+		<StyleInclude Source="/Styles/ButtonStyles.axaml"/>
+
 	</Application.Styles>
 </Application>

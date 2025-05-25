@@ -1,0 +1,20 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+	<!-- アクセントカラーの定義 -->
+	<Color x:Key="AccentColor">#AE2525</Color>
+	<SolidColorBrush x:Key="AccentBrush" Color="{StaticResource AccentColor}" />
+	
+	<!-- スライダー関連の色 -->
+	<SolidColorBrush x:Key="SliderThumbBackground" Color="{StaticResource AccentColor}" />
+	<SolidColorBrush x:Key="SliderThumbBackgroundPointerOver" Color="{StaticResource AccentColor}" />
+	<SolidColorBrush x:Key="SliderThumbBackgroundPressed" Color="{StaticResource AccentColor}" />
+	
+	<!-- スライダーの値トラック色 -->
+	<SolidColorBrush x:Key="SliderTrackValueFill" Color="{StaticResource AccentColor}" />
+	<SolidColorBrush x:Key="SliderTrackValueFillPointerOver" Color="{StaticResource AccentColor}" />
+	<SolidColorBrush x:Key="SliderTrackValueFillPressed" Color="{StaticResource AccentColor}" />
+	
+	<!-- Thumbのサイズ -->
+	<x:Double x:Key="SliderHorizontalThumbWidth">12</x:Double>
+	<x:Double x:Key="SliderHorizontalThumbHeight">12</x:Double>
+</ResourceDictionary>
