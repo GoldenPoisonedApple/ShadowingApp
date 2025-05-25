@@ -1,0 +1,64 @@
+####################################################################################################
+Package:Avalonia
+Version:11.2.8
+project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
+Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Avalonia.Desktop
+Version:11.2.7
+project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
+Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Avalonia.Diagnostics
+Version:11.2.7
+project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
+Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Avalonia.Fonts.Inter
+Version:11.2.7
+project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
+Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Avalonia.ReactiveUI
+Version:11.2.8
+project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
+Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:Avalonia.Themes.Fluent
+Version:11.2.7
+project URL:https://avaloniaui.net/?utm_source=nuget&utm_medium=referral&utm_content=project_homepage_link
+Description:Avalonia is a cross-platform UI framework for .NET providing a flexible styling system and supporting a wide range of Operating Systems such as Windows, Linux, macOS and with experimental support for Android, iOS and WebAssembly.
+licenseUrl:https://licenses.nuget.org/MIT
+license Type:MIT
+
+####################################################################################################
+Package:NAudio
+Version:2.2.1
+project URL:https://github.com/naudio/NAudio
+Description:NAudio, an audio library for .NET
+licenseUrl:https://www.nuget.org/packages/NAudio/2.2.1/License
+license Type:license.txt
+
+####################################################################################################
+Package:TagLibSharp
+Version:2.3.0
+project URL:https://github.com/mono/taglib-sharp
+Description:A library for for reading and writing metadata in media files, including video, audio, and photo formats.
+licenseUrl:https://licenses.nuget.org/LGPL-2.1-only
+license Type:LGPL-2.1-only
+
